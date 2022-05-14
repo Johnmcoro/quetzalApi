@@ -1,8 +1,8 @@
 package models
 
 type UserDBModel struct {
-	Username string
-	Email    string
+	Username string `db:"username"`
+	Email    string `db:"email"`
 }
 
 type UserJsonModel struct {

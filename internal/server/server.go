@@ -1,7 +1,6 @@
 package server
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -11,7 +10,6 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/johnmcoro/quetzalapi/internal/storage/postgres"
 	transport "github.com/johnmcoro/quetzalapi/internal/transport/http"
-
 	"go.uber.org/zap"
 )
 
@@ -26,10 +24,10 @@ func New() *Server {
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 	db, err := postgres.New()
-	logger.Info("Test logger")
 	if err != nil {
 		logger.Error("Error connecting to database")
 	}
+	logger.Info("Connected to postgres")
 	env := transport.NewEnv(db, logger, router)
 	transport.InitializeRoutes(env)
 	return &Server{
@@ -40,8 +38,11 @@ func New() *Server {
 }
 
 func (s *Server) Run() error {
-	http.ListenAndServe(":8080", s.Router)
+	err := http.ListenAndServe(":8080", s.Router)
 	s.Logger.Info("Server starting on port 8080")
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -51,13 +52,16 @@ func (s *Server) Migrate() error {
 		return err
 	}
 	m, err := migrate.NewWithDatabaseInstance("file://migrations", "postgres", driver)
+
 	if err != nil {
 		return err
 	}
 	s.Logger.Info("Running migrations...")
 	if err := m.Up(); err != nil {
-		log.Fatal(err)
-		return err
+		if err != migrate.ErrNoChange {
+			return err
+		}
+
 	}
 	return nil
 }
