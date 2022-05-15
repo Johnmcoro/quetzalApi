@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/johnmcoro/quetzalapi/models"
+	"github.com/johnmcoro/quetzalapi/internal/models"
 )
 
 type UserStorage interface {

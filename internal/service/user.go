@@ -3,8 +3,8 @@ package service
 import (
 	"log"
 
+	"github.com/johnmcoro/quetzalapi/internal/models"
 	"github.com/johnmcoro/quetzalapi/internal/storage/postgres"
-	"github.com/johnmcoro/quetzalapi/models"
 )
 
 type UserService interface {
