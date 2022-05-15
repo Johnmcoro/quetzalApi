@@ -1,7 +1,7 @@
 
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION citext;
+CREATE EXTENSION IF NOT EXISTS citext;
 
 CREATE TYPE token_type AS ENUM ('confirmation', 'password_reset');
 CREATE TABLE users (
